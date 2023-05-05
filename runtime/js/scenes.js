@@ -1,5 +1,5 @@
 import { scenes } from "./main.js";
-import { Serializable, registerSingleton } from "./serde.js";
+import { Serializable, registerClass } from "./serde.js";
 
 export class Scene extends Serializable {
 	start() { }
@@ -34,7 +34,7 @@ export class Splash extends Scene {
 		scenes.change(Title);
 	}
 }
-registerSingleton(Splash.name, Splash);
+registerClass(Splash);
 
 export class Title extends Scene {
 	onFocused() {
@@ -44,4 +44,4 @@ export class Title extends Scene {
 		scenes.pop();
 	}
 }
-registerSingleton(Title.name, Title);
+registerClass(Title);

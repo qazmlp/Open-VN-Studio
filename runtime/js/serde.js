@@ -14,6 +14,11 @@ export function registerSingleton(
 	singletons.set(key, value);
 	reverseSingletons.set(value, key);
 }
+export function registerClass(
+	/** @type {new () => any} */ c
+) {
+	registerSingleton(c.name, c);
+}
 
 // These are common values that aren't handled well by JSON.
 // They are loaded up as singletons instead, and have secial handling when serialising.

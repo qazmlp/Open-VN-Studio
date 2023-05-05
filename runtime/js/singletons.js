@@ -1,5 +1,5 @@
 import { Scene } from "./scenes.js";
-import { Serializable, registerSingleton } from "./serde.js";
+import { Serializable, registerClass } from "./serde.js";
 import { InvalidOperationError } from "./errors.js";
 
 export class SceneStack extends Serializable {
@@ -127,4 +127,4 @@ export class SceneStack extends Serializable {
 		this.#scenes.pop();
 	}
 }
-registerSingleton(SceneStack.name, SceneStack);
+registerClass(SceneStack);
