@@ -7,19 +7,18 @@ export class Scene extends Serializable {
 
 	#focused = false;
 	get focused() { return this.#focused; }
-	set focused(v) { this.#focused = v; }
-
-	onFocused() {
-		this.#focused = true;
-	}
-	onFocusLost() { /* Empty. */ }
-
-	loseFocus() {
-		if (this.#focused) {
-			this.#focused = false;
+	set focused(v) {
+		if (v === this.#focused) return;
+		this.#focused = v;
+		if (v) {
+			this.onFocused();
+		} else {
 			this.onFocusLost();
 		}
 	}
+
+	onFocused() { /* Empty. */ }
+	onFocusLost() { /* Empty. */ }
 
 	update() { }
 	updateBlurring() { return true; }

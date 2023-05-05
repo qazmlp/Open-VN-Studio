@@ -1,6 +1,7 @@
 import { Scene } from "./scenes.js";
 import { Serializable, setupSerializable } from "./serde.js";
 import { InvalidOperationError } from "./errors.js";
+import { unreachable } from "./utils.js";
 
 export class SceneStack extends Serializable {
 	/** @type {Scene[]} */
@@ -104,13 +105,16 @@ export class SceneStack extends Serializable {
 	) {
 		if (sceneClasses.length === 0) return;
 
-		this.#scenes.at(-1)?.onFocusLost();
+		{
+			const scene = this.#scenes.at(-1);
+			if (scene) scene.focused = false;
+		}
 		for (const sceneClass of sceneClasses) {
 			const pushed = new sceneClass;
 			this.#scenes.push(pushed);
 			pushed.start();
 		}
-		this.#scenes.at(-1)?.onFocused();
+		(this.#scenes.at(-1) ?? unreachable()).focused = true;
 	}
 
 	execPop() {
@@ -119,7 +123,7 @@ export class SceneStack extends Serializable {
 			throw new InvalidOperationError("Tried to `execPop` a `Scene` while the scene stack was empty.");
 		}
 
-		scene.loseFocus();
+		scene.focused = false;
 		scene.stop();
 		this.#scenes.pop();
 	}
