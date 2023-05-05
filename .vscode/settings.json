@@ -1,0 +1,5 @@
+{
+    "js/ts.implicitProjectConfig.checkJs": true,
+    "js/ts.implicitProjectConfig.target": "ES2022",
+    "js/ts.implicitProjectConfig.module": "ES2022"
+}
