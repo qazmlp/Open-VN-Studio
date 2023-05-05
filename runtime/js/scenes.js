@@ -9,9 +9,6 @@ export class Scene extends Serializable {
 	get focused() { return this.#focused; }
 	set focused(v) { this.#focused = v; }
 
-	get 'a.'() { return {}; }
-	set 'a.'(v) { }
-
 	onFocused() {
 		this.#focused = true;
 	}
@@ -29,7 +26,7 @@ export class Scene extends Serializable {
 	updatePopping() { return true; }
 	updateBackground() { }
 }
-setupSerializable(Scene, 'focused', 'a.');
+setupSerializable(Scene, 'focused');
 
 export class Splash extends Scene {
 	onFocused() {
