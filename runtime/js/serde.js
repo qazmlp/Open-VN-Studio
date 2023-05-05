@@ -22,17 +22,6 @@ singletons.set("NaN", NaN);
 singletons.set("Infinity", Infinity);
 singletons.set("-Infinity", -Infinity);
 
-const customs = new Map();
-export function registerCustom(
-	/** @type {string} */ key,
-	/** @type {(deserializer: Deserializer, source: Record<ObjectLink, SerializedObject>, valueMap: Map<string, any>, ...params: any[]) => any} */ restore,
-) {
-	if (customs.has(key) && customs.get(key) !== restore) {
-		console.error("Duplicate custom deserialiser: Registering", restore, "as", key, "which was already assigned to", singletons.get(key));
-		throw new InvalidOperationError("Custom deserialiser with this key already exists.");
-	}
-}
-
 export class Serializable extends Obj {
 	get serializedKeys() { return ['constructor']; }
 }
@@ -117,14 +106,14 @@ export class Serializer {
 						default: break;
 					}
 					if (Object.getOwnPropertyDescriptor(sO, sOKey)) {
-						throw new TypeError(`Duplicate serialized property key: ${key}`);
+						throw new TypeError(`Duplicate serialized property key in ${value}: ${key}`);
 					}
 					sO[sOKey] = this.serializeInto(value[key], target, valueMap, `${objectKey}.${key}`);
 				}
 				return `${objectKey}`;
 			} else if (value instanceof Array) {
 				valueMap.set(value, objectKey);
-				target[objectKey] = ['Array', ...value.map((x, i) => this.serializeInto(x, target, valueMap, `${objectKey}.${i}`))];
+				target[objectKey] = value.map((x, i) => this.serializeInto(x, target, valueMap, `${objectKey}.${i}`));
 				return `${objectKey}`;
 			} else {
 				throw new TypeError(`Unserialisable value encountered: ${value}`);

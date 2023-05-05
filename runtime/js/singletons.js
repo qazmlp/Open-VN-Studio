@@ -4,7 +4,7 @@ import { InvalidOperationError } from "./errors.js";
 
 export class SceneStack extends Serializable {
 	/** @override */
-	get serializedKeys() { return [...super.serializedKeys, 'scenes', 'popCount', 'pushQueue']; }
+	get serializedKeys() { return super.serializedKeys.concat('scenes', 'popCount', 'pushQueue'); }
 
 	/** @type {Scene[]} */
 	#scenes = [];
