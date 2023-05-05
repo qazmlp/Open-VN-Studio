@@ -2,8 +2,8 @@ import { scenes } from "./main.js";
 import { Serializable, setupSerializable } from "./serde.js";
 
 export class Scene extends Serializable {
-	start() { }
-	stop() { }
+	start() { /* Empty. */ }
+	stop() { /* Empty. */ }
 
 	#focused = false;
 	get focused() { return this.#focused; }
@@ -20,10 +20,10 @@ export class Scene extends Serializable {
 	onFocused() { /* Empty. */ }
 	onFocusLost() { /* Empty. */ }
 
-	update() { }
+	update() { /* Empty. */ }
 	updateBlurring() { return true; }
 	updatePopping() { return true; }
-	updateBackground() { }
+	updateBackground() { /* Empty. */ }
 }
 setupSerializable(Scene, 'focused');
 
