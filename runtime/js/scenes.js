@@ -1,17 +1,21 @@
 import { scenes } from "./main.js";
-import { Serializable, registerClass } from "./serde.js";
+import { Serializable, setupSerializable } from "./serde.js";
 
 export class Scene extends Serializable {
 	start() { }
 	stop() { }
 
 	#focused = false;
+	get focused() { return this.#focused; }
+	set focused(v) { this.#focused = v; }
+
+	get 'a.'() { return {}; }
+	set 'a.'(v) { }
+
 	onFocused() {
 		this.#focused = true;
 	}
-	onFocusLost() {
-
-	}
+	onFocusLost() { /* Empty. */ }
 
 	loseFocus() {
 		if (this.#focused) {
@@ -25,6 +29,7 @@ export class Scene extends Serializable {
 	updatePopping() { return true; }
 	updateBackground() { }
 }
+setupSerializable(Scene, 'focused', 'a.');
 
 export class Splash extends Scene {
 	onFocused() {
@@ -34,7 +39,7 @@ export class Splash extends Scene {
 		scenes.change(Title);
 	}
 }
-registerClass(Splash);
+setupSerializable(Splash);
 
 export class Title extends Scene {
 	onFocused() {
@@ -44,4 +49,4 @@ export class Title extends Scene {
 		scenes.pop();
 	}
 }
-registerClass(Title);
+setupSerializable(Title);

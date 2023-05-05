@@ -1,11 +1,8 @@
 import { Scene } from "./scenes.js";
-import { Serializable, registerClass } from "./serde.js";
+import { Serializable, setupSerializable } from "./serde.js";
 import { InvalidOperationError } from "./errors.js";
 
 export class SceneStack extends Serializable {
-	/** @override */
-	get serializedKeys() { return super.serializedKeys.concat('scenes', 'popCount', 'pushQueue'); }
-
 	/** @type {Scene[]} */
 	#scenes = [];
 	get scenes() { return this.#scenes; }
@@ -127,4 +124,4 @@ export class SceneStack extends Serializable {
 		this.#scenes.pop();
 	}
 }
-registerClass(SceneStack);
+setupSerializable(SceneStack, 'scenes', 'popCount', 'pushQueue');
