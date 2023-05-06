@@ -6,14 +6,9 @@ export async function loadTemplate(templatePath) {
 		const xhr = new XMLHttpRequest();
 		xhr.open('GET', templatePath);
 		xhr.responseType = 'document';
-		let done = false;
-		xhr.onreadystatechange = () => {
-			if (xhr.readyState === 4 && !done) {
-				done = true;
-				resolve(xhr.responseXML);
-			}
-		};
-		xhr.onerror = reject;
+		xhr.addEventListener('load', function () { resolve(this.responseXML); });
+		xhr.addEventListener('error', reject);
+		xhr.addEventListener('abort', reject);
 		xhr.send();
 	})).querySelector('template');
 }
