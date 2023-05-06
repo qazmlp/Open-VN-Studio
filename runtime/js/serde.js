@@ -27,9 +27,10 @@ singletons.set("-Infinity", -Infinity);
 // `{}`-style objects are allowed as special exception.
 registerSingleton(Object.name, Object);
 
+/** @template T */
 export function setEnumerable(
-	/** @type {any} */ o,
-	/** @type {string[]} */ ...keys
+	/** @type {T} */ o,
+	/** @type {(keyof T & string | 'constructor')[]} */ ...keys
 ) {
 	for (const key of keys) {
 		if (!Object.getOwnPropertyDescriptor(o, key)) {
@@ -39,9 +40,10 @@ export function setEnumerable(
 	}
 }
 
+/** @template T */
 export function setupSerializable(
-	/** @type {new () => any} */ c,
-	/** @type {string[]} */ ...extraKeys
+	/** @type {new () => T} */ c,
+	/** @type {(keyof T & string)[]} */ ...extraKeys
 ) {
 	registerSingleton(c.name, c);
 	setEnumerable(c.prototype, 'constructor', ...extraKeys);

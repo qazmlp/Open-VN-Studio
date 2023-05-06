@@ -1,0 +1,10 @@
+* {
+	box-sizing: border-box;
+}
+
+html,
+body,
+.scene-editor {
+	margin: 0;
+	height: 100%;
+}
