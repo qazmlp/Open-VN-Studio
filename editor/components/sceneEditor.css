@@ -11,20 +11,20 @@ canvas {
 	background-color: gray;
 }
 
-.scene-preview {
+fieldset {
+	margin: 10px;
+}
+
+.preview {
 	grid-area: preview;
 }
 
-.scene-timeline {
+.timeline {
 	grid-area: timeline;
-	margin: 10px;
-	display: block;
 	box-shadow: inset 0 0 100px 10px lightgray;
 }
 
-.scene-tools {
+.tools {
 	grid-area: tools;
-	margin: 10px;
-	display: block;
 	box-shadow: inset 0 0 100px lightgreen;
 }

@@ -3,8 +3,7 @@
 }
 
 html,
-body,
-.scene-editor {
+body {
 	margin: 0;
 	height: 100%;
 }
