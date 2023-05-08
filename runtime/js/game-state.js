@@ -28,7 +28,11 @@ export class StateObject extends Serializable {
 				const value = this[key];
 				if (value instanceof StateObject) {
 					value.dirty = false;
-				}
+				} else if (value instanceof Array) {
+					for (const item of value) if (item instanceof StateObject) {
+						item.dirty = false;
+					}
+				} //TODO: Auto-clean through `SerializableValue`s.
 			}
 		}
 	}
