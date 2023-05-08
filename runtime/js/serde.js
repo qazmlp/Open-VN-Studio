@@ -57,6 +57,13 @@ export function setupSerializable(
 	setEnumerable(c.prototype, 'constructor', ...extraKeys);
 }
 
+/**
+ * Note: If there are extra keys during deserialisation, those aren't lost but will
+ * show up as enumerable own properties on the deserialised object. This should prevent
+ * data loss when loading saves in an older version of a game, and allows the use of
+ * dictionary-style records, but it could cause issues if names are reused with different
+ * meaning later on.
+ */
 export class Serializable extends Obj { }
 registerSingleton(Serializable.name, Serializable);
 
