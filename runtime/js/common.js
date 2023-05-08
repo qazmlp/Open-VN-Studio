@@ -6,10 +6,12 @@
  * Copyright 2023 Qazm
  */
 
+export const INIT = Symbol('init method key');
+
 export class Obj extends null {
-	constructor(...args) {
+	constructor() {
 		const constructed = Object.create(new.target.prototype);
-		constructed.init(...args);
+		Obj.prototype[INIT].apply(constructed);
 		return constructed;
 	}
 
@@ -17,7 +19,11 @@ export class Obj extends null {
 		return this.constructor.name;
 	}
 
-	init(...args) { /* Empty. */ }
+	/**
+	 * Always hide the base method and make a new call in the constructor.
+	 * That's a little unorthodox, but it works nicely with private properties.
+	 */
+	[INIT]() { /* Empty. */ }
 }
 
 export let time = 0;

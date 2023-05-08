@@ -6,7 +6,7 @@
  * Copyright 2023 Qazm
  */
 
-import { Obj } from "./common.js";
+import { INIT, Obj } from "./common.js";
 import { InvalidOperationError } from "./errors.js";
 
 /** @type {Map<string, any>} */
@@ -64,7 +64,15 @@ export function setupSerializable(
  * dictionary-style records, but it could cause issues if names are reused with different
  * meaning later on.
  */
-export class Serializable extends Obj { }
+export class Serializable extends Obj {
+	constructor() {
+		super();
+		Serializable.prototype[INIT].apply(this);
+	}
+
+	/** @overload */
+	[INIT]() { /* Empty. */ }
+}
 registerSingleton(Serializable.name, Serializable);
 
 export class SerializableValue extends Obj { }

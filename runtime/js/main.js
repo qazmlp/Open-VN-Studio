@@ -7,11 +7,15 @@
  */
 
 import { setTime } from "./common.js";
+import { SMessageTextStyle } from "./game-state.js";
 import { Splash } from "./scenes.js";
 import { deserialize, serialize } from "./serde.js";
 import { SceneStack } from "./singletons.js";
 
 export const scenes = new SceneStack();
+export const defaultMessageTextStyle = new SMessageTextStyle(); //TODO: Load from data files.
+
+console.log(defaultMessageTextStyle);
 
 scenes.push(Splash);
 
