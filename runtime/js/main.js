@@ -15,7 +15,7 @@ import { SceneStack } from "./singletons.js";
 export const scenes = new SceneStack();
 export const defaultMessageTextStyle = new SMessageTextStyle(); //TODO: Load from data files.
 
-console.log(defaultMessageTextStyle);
+console.log(defaultMessageTextStyle, defaultMessageTextStyle.family = 'sans-serif', defaultMessageTextStyle.dirty);
 
 scenes.push(Splash);
 

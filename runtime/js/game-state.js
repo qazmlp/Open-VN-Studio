@@ -27,19 +27,20 @@ import { Serializable, setupSerializable } from "./serde.js";
 class StateObjectBase extends Serializable {
 	constructor() {
 		super();
+		/** @type {StateObjectBase & {dirty?: boolean}} */
 		const proxy = new Proxy(this, {
 			set(target, key, value, receiver) {
 				try {
 					return Reflect.set(target, key, value, receiver);
 				} finally {
-					proxy.dirty = true;
+					if (key !== 'dirty') proxy.dirty = true;
 				}
 			},
 			deleteProperty(target, key) {
 				try {
-					return delete target[key] && (proxy.dirty = true);
+					return delete target[key];
 				} catch (e) {
-					proxy.dirty = true;
+					if (key !== 'dirty') proxy.dirty = true;
 					throw e;
 				}
 			},
@@ -58,7 +59,7 @@ class StateObjectBase extends Serializable {
 						Object.defineProperty(target, key, attrs);
 						return true;
 					} finally {
-						proxy.dirty = true;
+						if (key !== 'dirty') proxy.dirty = true;
 					}
 				} else {
 					throw new TypeError("Properties added to individual `StateObject` instances must be simple writable, configurable, enumerable non-getter non-setter properties. Please subclass the type if you need something more complicated.");
