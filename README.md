@@ -15,6 +15,12 @@ This software is licensed under [MPL 2.0](./LICENSE.txt) on a per-file basis. Th
 
 Some meta data and configuration files in this repository are dedicated to the public domain under CC0 1.0 Universal, which is equally noted per file or folder.
 
+## Target Platforms
+
+For the runtime, ensure that everything functions across the current stable versions of Firefox, Chromium and Safari. There will also be an option to package apps for the desktop and ideally, eventually, Android and iOS.
+
+The editor will be stand-alone, more or less, so anything that works in current stable Chromium is fine. (This project really benefits from Module Worker availability.)
+
 ## Contributing
 
 This project accepts contributions under the unmodified MPL-2.0 without incompatibility with secondary licenses.
