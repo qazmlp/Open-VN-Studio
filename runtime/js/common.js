@@ -7,9 +7,9 @@
  */
 
 export class Obj extends null {
-	constructor() {
+	constructor(...args) {
 		const constructed = Object.create(new.target.prototype);
-		constructed.init();
+		constructed.init(...args);
 		return constructed;
 	}
 
@@ -17,7 +17,7 @@ export class Obj extends null {
 		return this.constructor.name;
 	}
 
-	init() { /* Empty. */ }
+	init(...args) { /* Empty. */ }
 }
 
 export let time = 0;
