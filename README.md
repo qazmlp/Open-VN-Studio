@@ -11,7 +11,7 @@ Just sketching…
 
 ## Licensing
 
-This software is licensed under [MPL 2.0](./LICENSE-MPL-2.0.txt) on a per-file basis. This is noted in each file of the Source Code Form or, where not otherwise useful, in a `FOLDER-LICENSE-…` file.
+This software is licensed under [MPL 2.0](./LICENSE.txt) on a per-file basis. This is noted in each file of the Source Code Form or, where not otherwise useful, in a `FOLDER-LICENSE-…` file.
 
 Some meta data and configuration files in this repository are dedicated to the public domain under CC0 1.0 Universal, which is equally noted per file or folder.
 
