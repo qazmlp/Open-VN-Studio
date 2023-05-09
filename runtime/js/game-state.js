@@ -257,7 +257,6 @@ setupDirtyAutosub(SMessage, 'speaker', 'content');
  */
 export class SMessageElement extends StateObject {
 	//TODO: These will be formatting spans of sorts.
-	// SMessageElement is the base class here.
 }
 setupSerializable(SMessageElement);
 
