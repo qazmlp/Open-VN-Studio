@@ -8,6 +8,7 @@
 
 import { INIT, Obj } from "./common.js";
 import { InvalidOperationError } from "./errors.js";
+import { StateObject } from "./game-state.js";
 
 /** @type {Map<string, any>} */
 const singletons = new Map();
@@ -51,7 +52,12 @@ export function setEnumerable(
 /** @template T */
 export function setupSerializable(
 	/** @type {new () => T} */ c,
-	/** @type {(keyof T & string)[]} */ ...extraKeys
+	/**
+	 * @type {((
+	 * 	T extends StateObject ? Exclude<keyof T, keyof StateObject>
+	 * 	: Exclude<keyof T, keyof Serializable>
+	 * ) & string)[]}
+	 */ ...extraKeys
 ) {
 	registerSingleton(c.name, c);
 	setEnumerable(c.prototype, 'constructor', ...extraKeys);

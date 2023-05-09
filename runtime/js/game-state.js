@@ -10,10 +10,56 @@ import { INIT } from "./common.js";
 import { InvalidOperationError } from "./errors.js";
 import { defaultMessageTextStyle } from "./main.js";
 import { Serializable, setupSerializable } from "./serde.js";
+import { unreachable } from "./utils.js";
 
 /**
  * @typedef {import("./data.d.ts").KPose} KPose
  */
+
+/** @type {Map<new (...args: any[]) => any, Map<string | symbol, boolean>>} */
+const autosubMap = new Map();
+function isPropertyAutosub(
+	/** @type {StateObjectBase} */ target,
+	/** @type {string | symbol} */ key,
+) {
+	let proto = target.constructor.prototype;
+	let autosub = autosubMap.get(proto)?.get(key);
+	if (autosub !== undefined) {
+		return autosub;
+	}
+	while (proto) {
+		const prop = Object.getOwnPropertyDescriptor(proto, key);
+		if (prop) {
+			autosub = autosubMap.get(proto)?.get(key) ?? false;
+			break;
+		}
+		proto = Object.getPrototypeOf(proto);
+	}
+	autosub ??= false;
+	let propMap = autosubMap.get(target.constructor.prototype);
+	if (!propMap) {
+		autosubMap.set(target.constructor.prototype, propMap = new Map());
+	}
+	propMap.set(key, autosub);
+	return autosub;
+}
+
+/** @template {StateObject} T */
+export function setupDirtyAutosub(
+	/** @type {new () => T} */ c,
+	/** @type {Exclude<keyof T, keyof StateObject>[]} */ ...includedKeys
+) {
+	let propMap = autosubMap.get(c.prototype);
+	if (!propMap) {
+		autosubMap.set(c.prototype, propMap = new Map());
+	}
+	for (const key in includedKeys) {
+		if (propMap.has(key)) {
+			throw new InvalidOperationError("Key already configured.");
+		}
+		propMap.set(key, true);
+	}
+}
 
 /**
  * It's a bit messy, but in short this sets up proxying for
@@ -25,19 +71,36 @@ import { Serializable, setupSerializable } from "./serde.js";
  * Nice and simple! ;D
  */
 class StateObjectBase extends Serializable {
+	/** @type {boolean} */
+	get dirty() { return unreachable(); }
+	set dirty(_dirty) { unreachable(); }
+
 	constructor() {
 		super();
-		/** @type {StateObjectBase & {dirty?: boolean}} */
 		const proxy = new Proxy(this, {
 			set(target, key, value, receiver) {
+				/** @type {any} */
+				let prior = undefined;
+				let resub = isPropertyAutosub(target, key);
+				if (resub) {
+					prior = Reflect.get(target, key, receiver);
+					resub = prior !== value;
+				}
+				if (resub) target.unsubscribeDirtyFrom(prior);
 				try {
-					return Reflect.set(target, key, value, receiver);
+					const set = Reflect.set(target, key, value, receiver);
+					if (resub) value instanceof Array ? target.subscribeDirtyTo(...value) : target.subscribeDirtyTo(value);
+					return set;
+				} catch (error) {
+					if (resub) prior instanceof Array ? target.subscribeDirtyTo(...prior) : target.subscribeDirtyTo(prior);
+					throw error;
 				} finally {
 					if (key !== 'dirty') proxy.dirty = true;
 				}
 			},
 			deleteProperty(target, key) {
 				try {
+					if (isPropertyAutosub(target, key)) target.unsubscribeDirtyFrom(target[key]);
 					return delete target[key];
 				} catch (e) {
 					if (key !== 'dirty') proxy.dirty = true;
@@ -57,6 +120,7 @@ class StateObjectBase extends Serializable {
 					try {
 						//TODO: Only allow this during deserialisation?
 						Object.defineProperty(target, key, attrs);
+						if (isPropertyAutosub(target, key)) target.subscribeDirtyTo(attrs.value);
 						return true;
 					} finally {
 						if (key !== 'dirty') proxy.dirty = true;
@@ -71,6 +135,9 @@ class StateObjectBase extends Serializable {
 		});
 		return proxy;
 	}
+
+	subscribeDirtyTo(/** @type {({subscribeDirty?(subscriber: {dirty: boolean})}?)[]} */ ...sources) { for (const source of sources) source?.subscribeDirty?.(this); }
+	unsubscribeDirtyFrom(/** @type {({unsubscribeDirty?(subscriber: {dirty: boolean})}?)[]} */ ...sources) { for (const source of sources) source?.unsubscribeDirty?.(this); }
 }
 
 /**
@@ -125,17 +192,13 @@ export class StateObject extends StateObjectBase {
 
 	/** Each unique subscriber is notified only once on dirty. */
 	subscribeDirty(
-		/** @type {{dirty: boolean}?} */ subscriber,
+		/** @type {{dirty: boolean}} */ subscriber,
 	) {
-		if (!subscriber) return;
-
 		this.#subscribers.set(subscriber, this.#subscribers.get(subscriber) ?? 0);
 	}
 	unsubscribeDirty(
-		/** @type {{dirty: boolean}?} */ subscriber,
+		/** @type {{dirty: boolean}} */ subscriber,
 	) {
-		if (!subscriber) return;
-
 		const count = this.#subscribers.get(subscriber);
 		if (count === undefined) {
 			throw new InvalidOperationError("Tried to `unsubscribeDirty` without first subscribing that often with the given subscriber.");
@@ -186,6 +249,7 @@ export class SMessage extends StateObject {
 	set content(content) { this.#content = content; }
 }
 setupSerializable(SMessage, 'speaker', 'loudness', 'content');
+setupDirtyAutosub(SMessage, 'speaker', 'content');
 
 /**
  * Base class for (generally) flow-layoutted message elements.
@@ -220,6 +284,10 @@ export class SMessageText extends SMessageElement {
 
 	/** @type {SMessageTextStyle} */
 	#style;
+	/**
+	 * This is *not* dirty-subscribed to avoid leaks!
+	 * TODO: Subscribe, but only while this is subscribed to.
+	 */
 	get style() { return this.#style; }
 	set style(style) { this.#style = style; }
 
