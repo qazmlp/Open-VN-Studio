@@ -252,7 +252,7 @@ setupSerializable(SMessage, 'speaker', 'loudness', 'content');
 setupDirtyAutosub(SMessage, 'speaker', 'content');
 
 /**
- * Base class for (generally) flow-layoutted message elements.
+ * Base class for (generally) flow-layouted message elements.
  * The hierarchy here should be pretty flat, as this is an evaluated form.
  */
 export class SMessageElement extends StateObject {
