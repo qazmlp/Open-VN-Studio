@@ -7,6 +7,7 @@
  */
 
 import { INIT } from "./common.js";
+import { DMessage } from "./display.js";
 import { InvalidOperationError } from "./errors.js";
 import { defaultMessageTextStyle } from "./main.js";
 import { Serializable, setupSerializable } from "./serde.js";
@@ -221,6 +222,9 @@ export class StateObject extends StateObjectBase {
 }
 setupSerializable(StateObject);
 
+/**
+ * Messages that are effectively empty should be skipped unless they contain an explicit stop.
+ */
 export class SMessage extends StateObject {
 	/** @type {SActor?} */
 	#speaker = null;
@@ -247,6 +251,40 @@ export class SMessage extends StateObject {
 	#content = [];
 	get content() { return this.#content; }
 	set content(content) { this.#content = content; }
+
+	/**
+	 * Prepares the message for display.
+	 *
+	 * This is generally called once when the message becomes 'current' or should be shown in the message log.
+	 * The resulting object holds relevant Pixi.js renderables and interactive elements.
+	 * 
+	 * The message is split into lines and contains grapheme info to make dynamic clipping easy and reliable.
+	 * 
+	 * This should *not* be called just to change the current message clipping while animating it.
+	 * Instead, clipping is configured on `DMessage` by the transient `TMessage`.
+	 *
+	 * @returns {DMessage}
+	 */
+	toDisplay(
+		/**
+		 * The width of the available flow text area.
+		 * @type {number},
+		 */
+		width,
+		/**
+		 * The width of the first line, if different.
+		 * @type {number},
+		 */
+		firstWidth = width,
+		/**
+		 * Text size scaling factor.
+		 * This is useful to render e.g. the message log a bit differently.
+		 * @type {number},
+		 */
+		scale = 1,
+	) {
+		TODO;
+	}
 }
 setupSerializable(SMessage, 'speaker', 'loudness', 'content');
 setupDirtyAutosub(SMessage, 'speaker', 'content');
@@ -260,7 +298,6 @@ export class SMessageElement extends StateObject {
 }
 setupSerializable(SMessageElement);
 
-const OBJ_INIT = Symbol('Obj.init');
 /**
  * Plain message text with font styling applied, possibly with line breaks.
  *
@@ -269,7 +306,7 @@ const OBJ_INIT = Symbol('Obj.init');
  */
 export class SMessageText extends SMessageElement {
 	constructor(
-		/** @type {string} */ text = '',
+		/** @type {string} */ text = "",
 		/** @type {SMessageTextStyle} */ style = defaultMessageTextStyle,
 	) {
 		super();
@@ -298,12 +335,44 @@ export class SMessageText extends SMessageElement {
 setupSerializable(SMessageText, 'text', 'style');
 
 /**
+ * Text that is normally hidden to sighted readers,
+ * but can (optionally!) be read aloud by screen reader tools.
+ *
+ * Think of this as the parts of a novel that are visual in a VN.
+ * Can also be useful to hash out what a character's sprite should do before it's implemented.
+ *
+ * In the editor, this is bracketed with [].
+ * 
+ * TODO: Is that the right name for this?
+ */
+export class SStageDirection extends SMessageElement {
+	constructor(
+		/** @type {string} */ text = "",
+	) {
+		super();
+		SStageDirection.prototype[INIT].call(this, text);
+	}
+
+	/** @type {string} */
+	#text;
+	get text() { return this.#text; }
+	set text(text) { this.#text = text; }
+
+	/** @overload */
+	[INIT](/* arguments */) {
+		[this.#text] = arguments;
+	}
+}
+
+/**
  * Pulled out of `SMessageText` so that it doesn't blow up save data size.
  * Treat this as immutable once used, but avoid creating new instances of
  * this class whenever possible.
  * 
  * TODO: Use a global message text style registry and _save it as part of
  * the game save_. Update it on load with named styles from the data files.
+ * 
+ * TODO: Align this with Pixi.js text styles.
  */
 export class SMessageTextStyle extends StateObject {
 
