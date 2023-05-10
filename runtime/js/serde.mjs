@@ -6,9 +6,9 @@
  * Copyright 2023 Qazm
  */
 
-import { INIT, Obj } from "./common.js";
-import { InvalidOperationError } from "./errors.js";
-import { StateObject } from "./game-state.js";
+import { INIT, Obj } from "./common.mjs";
+import { InvalidOperationError } from "./errors.mjs";
+import { StateObject } from "./game-state.mjs";
 
 /** @type {Map<string, any>} */
 const singletons = new Map();

@@ -6,7 +6,7 @@
  * Copyright 2023 Qazm
  */
 
-import { deepCloneNode } from "../../runtime/js/utils.js";
+import { deepCloneNode } from "../../runtime/js/utils.mjs";
 
 /** @returns {Promise<HTMLTemplateElement>} */
 export async function loadTemplate(templatePath) {

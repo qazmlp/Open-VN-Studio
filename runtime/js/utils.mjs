@@ -6,7 +6,7 @@
  * Copyright 2023 Qazm
  */
 
-import { UnreachableError } from "./errors.js";
+import { UnreachableError } from "./errors.mjs";
 
 /** @returns {never} */
 export function unreachable() {

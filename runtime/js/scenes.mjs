@@ -6,8 +6,8 @@
  * Copyright 2023 Qazm
  */
 
-import { scenes } from "./main.js";
-import { Serializable, setupSerializable } from "./serde.js";
+import { scenes } from "./main.mjs";
+import { Serializable, setupSerializable } from "./serde.mjs";
 
 export class Scene extends Serializable {
 	start() { /* Empty. */ }

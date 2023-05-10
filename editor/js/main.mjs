@@ -6,8 +6,8 @@
  * Copyright 2023 Qazm
  */
 
-import { SceneEditor } from "../components/sceneEditor.js";
-import { EditorState } from "./editorState.js";
+import { SceneEditor } from "../components/sceneEditor.mjs";
+import { EditorState } from "./editorState.mjs";
 
 const sceneEditor = new SceneEditor();
 document.body.appendChild(sceneEditor);

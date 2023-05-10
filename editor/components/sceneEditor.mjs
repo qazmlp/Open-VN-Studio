@@ -6,7 +6,7 @@
  * Copyright 2023 Qazm
  */
 
-import { EditorElement, loadTemplate } from "../js/editorElement.js";
+import { EditorElement, loadTemplate } from "../js/editorElement.mjs";
 
 /** @type {HTMLTemplateElement} */
 const template = await loadTemplate('components/sceneEditor.htm');

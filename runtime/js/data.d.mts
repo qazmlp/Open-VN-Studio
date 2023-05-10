@@ -6,7 +6,7 @@
  * Copyright 2023 Qazm
  */
 
-import { Serializable } from "./serde";
+import { Serializable } from "./serde.mjs";
 
 interface Step {
 	namespace?: string,

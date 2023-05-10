@@ -1,4 +1,4 @@
-import { DMessage } from "./display";
+import { DMessage } from "./display.mjs";
 
 export class Transient {
 	tick() { /* Empty. */ }

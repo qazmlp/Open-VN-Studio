@@ -6,10 +6,10 @@
  * Copyright 2023 Qazm
  */
 
-import { Scene } from "./scenes.js";
-import { Serializable, setupSerializable } from "./serde.js";
-import { InvalidOperationError } from "./errors.js";
-import { unreachable } from "./utils.js";
+import { Scene } from "./scenes.mjs";
+import { Serializable, setupSerializable } from "./serde.mjs";
+import { InvalidOperationError } from "./errors.mjs";
+import { unreachable } from "./utils.mjs";
 
 export class SceneStack extends Serializable {
 	/** @type {Scene[]} */

@@ -6,11 +6,11 @@
  * Copyright 2023 Qazm
  */
 
-import { setTime } from "./common.js";
-import { SMessageTextStyle } from "./game-state.js";
-import { Splash } from "./scenes.js";
-import { deserialize, serialize } from "./serde.js";
-import { SceneStack } from "./singletons.js";
+import { setTime } from "./common.mjs";
+import { SMessageTextStyle } from "./game-state.mjs";
+import { Splash } from "./scenes.mjs";
+import { deserialize, serialize } from "./serde.mjs";
+import { SceneStack } from "./singletons.mjs";
 
 export const scenes = new SceneStack();
 export const defaultMessageTextStyle = new SMessageTextStyle(); //TODO: Load from data files.

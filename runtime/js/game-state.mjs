@@ -6,15 +6,15 @@
  * Copyright 2023 Qazm
  */
 
-import { INIT } from "./common.js";
-import { DMessage } from "./display.js";
-import { InvalidOperationError } from "./errors.js";
-import { defaultMessageTextStyle } from "./main.js";
-import { Serializable, setupSerializable } from "./serde.js";
-import { unreachable } from "./utils.js";
+import { INIT } from "./common.mjs";
+import { DMessage } from "./display.mjs";
+import { InvalidOperationError } from "./errors.mjs";
+import { defaultMessageTextStyle } from "./main.mjs";
+import { Serializable, setupSerializable } from "./serde.mjs";
+import { unreachable } from "./utils.mjs";
 
 /**
- * @typedef {import("./data.d.ts").KPose} KPose
+ * @typedef {import("./data.mjs").KPose} KPose
  */
 
 /** @type {Map<new (...args: any[]) => any, Map<string | symbol, boolean>>} */

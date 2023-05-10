@@ -6,7 +6,7 @@
  * Copyright 2023 Qazm
  */
 
-import { Serializable, setupSerializable } from "../../runtime/js/serde.js";
+import { Serializable, setupSerializable } from "../../runtime/js/serde.mjs";
 
 export class EditorState extends Serializable {
 
